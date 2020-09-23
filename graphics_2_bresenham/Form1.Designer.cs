@@ -70,7 +70,6 @@
             this.label1.Size = new System.Drawing.Size(262, 26);
             this.label1.TabIndex = 2;
             this.label1.Text = "Enter the coordinates of the top point of the rectangle:\r\n\r\n";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // textBox1
             // 
@@ -144,7 +143,6 @@
             this.label6.Size = new System.Drawing.Size(41, 13);
             this.label6.TabIndex = 11;
             this.label6.Text = "Height:";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
             // Form1
             // 
