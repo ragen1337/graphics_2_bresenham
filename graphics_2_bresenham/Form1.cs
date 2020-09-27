@@ -17,50 +17,62 @@ namespace graphics_2_bresenham
             InitializeComponent();
         }
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
-        {
-        }
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             DrawForm(g);
         }
 
-        private void DrawForm(Graphics g)
+        private void DrawForm( Graphics g )
+        {
+            //Pen blackPen = new Pen(Color.Black, 1);
+            //Brush blackSolidBrush = new SolidBrush(Color.Black);
+
+            //Grid grid = new Grid();
+            //grid.DrawBitMap(blackPen, g);
+
+        }
+
+        private void DrawFormLine(Graphics g)
         {
             Pen blackPen = new Pen(Color.Black, 1);
             Brush blackSolidBrush = new SolidBrush(Color.Black);
-            DrawBitMap(blackPen, g);
 
-            for (int i = 1, j = 2; i <= 10; i++, j++)
-            {
-                DrawPixel(blackSolidBrush, i, j, g);
-            }
-        }
+            Grid grid = new Grid();
+            grid.DrawBitMap(blackPen, g);
 
-        private void DrawBitMap(Pen pen, Graphics g){
-            for(short i = 0; i <= 1000; i += 20)
-            {
-                PointF linePoint1 = new PointF(0, i);
-                PointF linePoint2 = new PointF(1000, i);
-                g.DrawLine(pen, linePoint1, linePoint2);
-
-                PointF linePoint3 = new PointF(i, 0);
-                PointF linePoint4 = new PointF(i, 1000);
-                g.DrawLine(pen, linePoint3, linePoint4);
-            }
-        }
-
-        private void DrawPixel(Brush brush, int CoordinateX, int CoordinateY, Graphics g)
-        {
-            int bitMapXCoordinate = (CoordinateX-1) * 20;
-            int bitMapYCoordinate = (CoordinateY-1) * 20;
-
-            Rectangle drawPixelRect = new Rectangle(bitMapXCoordinate, bitMapYCoordinate, 20, 20);
-            g.FillRectangle(brush, drawPixelRect);
+            Bresenham bresenham = new Bresenham();
+            bresenham.MyDrawLine(blackSolidBrush, 1, 1, 3, 3, g);
         }
 
         private void button1_Click(object sender, EventArgs e)
+        {
+            int x1 = int.Parse(LineX1TextBox.Text);
+            int y1 = int.Parse(LineY1TextBox.Text);
+            int x2 = int.Parse(LineX2TextBox.Text);
+            int y2 = int.Parse(LineY2TextBox.Text);
+
+            Graphics g = CreateGraphics();
+            DrawFormLine(g);
+            pictureBox1.Refresh();
+        }
+
+        private void textBox7_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox8_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox6_TextChanged(object sender, EventArgs e)
         {
 
         }
