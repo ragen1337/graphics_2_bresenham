@@ -122,87 +122,80 @@ namespace graphics_2_bresenham
             }
         }
 
-        public void MyDrawEllipse(Brush brush, int CoordinateX, int CoordinateY, int width, int height, Graphics g)
+        public void MyDrawEllipse(Brush brush, Graphics graphics, Grid grid, int xc, int yc, int rx, int ry)
         {
-            Grid grid = new Grid();
-            bool infinityMarker = false;
-            
-            grid.DrawPixel(brush, CoordinateX + width, CoordinateY + height / 2, g);
-            grid.DrawPixel(brush, CoordinateX + width/2, CoordinateY, g);
-            grid.DrawPixel(brush, CoordinateX , CoordinateY + height/2, g);
-            grid.DrawPixel(brush, CoordinateX + width / 2, CoordinateY + height, g);
+            //Grid grid = new Grid();
+            double dx, dy, d1, d2;
+            int x, y;
+            x = 0;
+            y = ry;
 
-            double Y = 0;
-            int X1 = CoordinateX + width;
-            double X2 = 0;
-            
-            int Xdraw = 0;
-            int Ydraw = 0;
-            int YIterator = CoordinateY + height/2 + 1;
-            double delta = 0;
-            bool xSwitcher = false;
-            for ( int i = CoordinateX + width - 1; i > CoordinateX + width/2; i-- )
+            // Initial decision parameter of region 1 
+            d1 = (ry * ry) - (rx * rx * ry) + (0.25 * rx * rx);
+            dx = 2 * ry * ry * x;
+            dy = 2 * rx * rx * y;
+
+            // For region 1 
+            while (dx < dy)
             {
-                Y = ((double)CoordinateY + 0.5 * (double)height + (1 / (double)width) * (Math.Sqrt(0.25* (double)(width * width) * (double)(height * height) - Math.Pow( (i - (double)CoordinateX - 0.5* (double)width), 2) * Math.Pow((double)height, 2) )));
-                if( Math.Abs( CoordinateX + width/2 - i ) >= Math.Abs(CoordinateY + height / 2 - Y))
+
+                // Print points based on 4-way symmetry 
+                grid.DrawPixel(brush, x + xc, y + yc, graphics);
+                grid.DrawPixel(brush, -x + xc, y + yc, graphics);
+                grid.DrawPixel(brush, x + xc, -y + yc, graphics);
+                grid.DrawPixel(brush, -x + xc, -y + yc, graphics);
+
+                // Checking and updating value of 
+                // decision parameter based on algorithm 
+                if (d1 < 0)
                 {
-                    X2 = (double)CoordinateX + 0.5 * (double)width + (1 / (double)height) * Math.Sqrt(0.25* (double)(width*width)* (double)(height*height) - Math.Pow(((double)YIterator - (double)CoordinateY - 0.5 * (double)height), 2) * Math.Pow((double)width, 2));
-
-                    delta = Math.Abs(X2 - X1);
-
-                    if (delta < 0.5)
-                    {
-                        Xdraw = X1;
-                    }
-                    else
-                    {
-                        if ((X2 - X1) > 0)
-                        {
-                            Xdraw = X1 + 1;
-                        }
-                        else
-                        {
-                            Xdraw = X1 - 1;
-                        }
-                    }
-                    X1 = (int)Math.Round(X2);
-
-                    grid.DrawPixel(brush, Xdraw, YIterator, g);
-
-                    YIterator++;
+                    x++;
+                    dx = dx + (2 * ry * ry);
+                    d1 = d1 + dx + (ry * ry);
                 }
                 else
                 {
-                    if (!xSwitcher)
-                    {
-                        i = Xdraw - 1;
-                        xSwitcher = true;
-                    }
-                    
-                    delta = Math.Abs(Y - YIterator);
+                    x++;
+                    y--;
+                    dx = dx + (2 * ry * ry);
+                    dy = dy - (2 * rx * rx);
+                    d1 = d1 + dx - dy + (ry * ry);
+                }
+            }
 
-                    if (delta < 0.5)
-                    {
-                        Ydraw = YIterator;
-                    }
-                    else
-                    {
-                        if ((Y - YIterator) > 0)
-                        {
-                            Ydraw = YIterator + 1;
-                        }
-                        else
-                        {
-                            Ydraw = YIterator - 1;
-                        }
-                    }
-                    YIterator = (int)Math.Round(Y);
+            // Decision parameter of region 2 
+            d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) +
+                 ((rx * rx) * ((y - 1) * (y - 1))) -
+                  (rx * rx * ry * ry);
 
-                    grid.DrawPixel(brush, i, Ydraw, g);
+            // Plotting points of region 2 
+            while (y >= 0)
+            {
 
-                    YIterator++;
+                // Print points based on 4-way symmetry 
+                grid.DrawPixel(brush, x + xc, y + yc, graphics);
+                grid.DrawPixel(brush, -x + xc, y + yc, graphics);
+                grid.DrawPixel(brush, x + xc, -y + yc, graphics);
+                grid.DrawPixel(brush, -x + xc, -y + yc, graphics);
+
+                // Checking and updating parameter 
+                // value based on algorithm 
+                if (d2 > 0)
+                {
+                    y--;
+                    dy = dy - (2 * rx * rx);
+                    d2 = d2 + (rx * rx) - dy;
+                }
+                else
+                {
+                    y--;
+                    x++;
+                    dx = dx + (2 * ry * ry);
+                    dy = dy - (2 * rx * rx);
+                    d2 = d2 + dx - dy + (rx * rx);
                 }
             }
         }
     }
+       
 }
